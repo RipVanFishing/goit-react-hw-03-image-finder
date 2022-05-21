@@ -1,16 +1,13 @@
+import SearchBar from './SearchBar';
+import ImageGallery from './ImageGallery';
+
+import styles from './Styles.module.css'
+
 export const App = () => {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      Hello world! 
+    <div className={styles.app}>
+      <SearchBar />
+      <ImageGallery/>
     </div>
   );
 };

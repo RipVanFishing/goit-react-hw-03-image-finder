@@ -1,3 +1,4 @@
+// import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import SearchBar from './SearchBar';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
@@ -18,12 +19,14 @@ class App extends Component{
 
   render() {
     return (
+      
       <div className={styles.app}>
         <SearchBar onSubmit={this.handleSubmitData} />
-        <ImageGallery />
+        <ImageGallery data={this.state.text} />
         <Button />
-        <ToastContainer autoClose={3000} position='top-right'/>
+       <ToastContainer />
       </div>
+      
     );
   }
 };

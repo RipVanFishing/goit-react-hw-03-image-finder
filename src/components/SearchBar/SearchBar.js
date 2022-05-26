@@ -1,5 +1,6 @@
 import { Component } from "react";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { BiSearchAlt } from "react-icons/bi"
 import css from './SearchBar.module.css';
 
 class SearchBar extends Component {
@@ -11,7 +12,9 @@ class SearchBar extends Component {
     handleSearch = (e) => {
         e.preventDefault();
         if (this.state.text.trim() === '') {
-            return toast.info("Введите предмет поиска :D")
+            alert("Введите предмет поиска")
+              
+            return;
         }
         this.props.onSubmit(this.state.text)
 
@@ -30,10 +33,11 @@ class SearchBar extends Component {
     
     render() {
         return(
-        <header className={css.searchbar}>
+            <header className={css.searchbar}>
+              
   <form onSubmit={this.handleSearch} className={css.searchForm}>
     <button type="submit" className={css.searchForm_button}>
-      <span className={css.searchForm_button_label}>Search</span>
+    <BiSearchAlt size={24} />
     </button>
 
     <input

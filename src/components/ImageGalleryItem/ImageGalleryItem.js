@@ -1,14 +1,21 @@
+import React, { Component } from 'react'
+import css from './ImageGalleryItem.module.css'
 
-import React from "react";
-import css from "./ImageGalleryItem.module.css";
+export default class ImageGalleryItem extends Component {
+    
 
-const ImageGalleryItem = ({id, webformatURL, largeImageURL}) => {
-    return (
-        <li className={css.ImageGalleryItem}>
-            <img src={webformatURL} alt={webformatURL} className={css.ImageGalleryItem_image} />
-            
-</li>
-    )
+showModal = (e) => {
+    this.props.showModal(this.props.largeImg)
 }
 
-export default ImageGalleryItem;
+
+
+
+  render() {
+    return (
+        <li className={css.gallery_item}>
+                <img src={this.props.URL} alt={this.props.alt} onClick={this.showModal} />
+        </li>
+    )
+  }
+}

@@ -81,7 +81,7 @@ export default class ImageGallery extends Component {
 
         {error && <div className='wrap'><h2>Картинки с именем <span className='wrapper'>{this.props.imgName}</span> не найдено</h2></div>}
 
-        {this.props.imgName === "" && <div className='wrap'><h2>Введите текст для поиска картинки</h2></div>}
+        {status === "waiting" && <div className='wrap'><h2>Введите текст для поиска картинки</h2></div>}
   
         {hits && <><ul className={css.imageGallery}>{this.state.hits.map(img => <ImageGalleryItem key={img.id} URL={img.webformatURL} largeImg={img.largeImageURL} alt={this.props.imgName} showModal={this.showModal} />)}
         

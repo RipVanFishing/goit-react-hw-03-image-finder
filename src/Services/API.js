@@ -1,5 +1,5 @@
 function FetchImg(name, page) {
-    return fetch(`https://pixabay.com/api/?q=${name}&page=${page}&key=25440089-75c058e87851521159a5db732&image_type=photo&orientation=horizontal&per_page=12`).then(response => {
+    return fetch(`https://pixabay.com/api/?q=${name}&page=${page}&key=25477224-484b864fbd655a75604639e30&image_type=photo&orientation=horizontal&per_page=12`).then(response => {
       if (response.ok) {
         return response.json();
       }

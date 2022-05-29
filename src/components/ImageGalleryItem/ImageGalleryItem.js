@@ -13,8 +13,8 @@ showModal = (e) => {
 
   render() {
     return (
-        <li className={css.gallery_item}>
-                <img src={this.props.URL} alt={this.props.alt} onClick={this.showModal} />
+        <li className={css.ImageGalleryItem}>
+                <img src={this.props.URL} alt={this.props.alt} onClick={this.showModal} className={css.ImageGalleryItem_image} />
         </li>
     )
   }

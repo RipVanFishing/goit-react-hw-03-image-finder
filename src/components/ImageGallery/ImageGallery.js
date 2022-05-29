@@ -1,63 +1,99 @@
+import React, { Component } from 'react'
+import API from "../../Services/API"
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
+import Modal from 'components/Modal/Modal'
+import Button from 'components/Button/Button'
 
-import { Grid } from "react-loader-spinner";
-import Modal from "components/Modal";
-import ImageGalleryItem from "components/ImageGalleryItem";
-import React, { Component } from "react";
 import css from './ImageGallery.module.css'
+import Loading from 'components/Loading/Loading'
+
+const Status = {
+  LOADING: "loading",
+  REJECTED: "rejected",
+  MODAL: "modal"
+}
+
+export default class ImageGallery extends Component {
+  state = {
+    hits: null,    
+    modalImg: "",    
+    error: null,
+    page: 1,
+    maxPage: 0,
+    showLoadMore: false,
+    status: "waiting"
+  }
 
 
+  showModal = (img) => {
+    this.setState({modalImg: img, status: Status.MODAL})
+  }
+  closeModal = () => {
+    this.setState({status: Status.REJECTED})
+  }
+  
+  async componentDidUpdate(prevProps, prevState) {
+    const prevName = prevProps.imgName;
+    const nextName = this.props.imgName;
+    
+    if  (prevName !== nextName) {
+      await this.setState({status: Status.LOADING, page: 1, hits: null })
 
-class ImageGallery extends Component {
-
-    state = {
-        hits: null,
-        error: '',
-        status: 'idle'
+                API.FetchImg(nextName, this.state.page)
+            .then(data=>{(data.total>0) ? this.setState({hits: data.hits, error: null}) : this.setState({error: true, hits: null}); if(data.total>12){this.setState({maxPage: Math.ceil(data.totalHits/12), showLoadMore: true})}})
+            .catch(error=>this.setState({error}))
+            .finally(()=>{this.setState({status: Status.REJECTED})})
+          
     }
-     
-    componentDidUpdate(prevProps, prevState) {
+
+
+
+  }
+
+ loadMore = async ()=>{
+    
+     await this.setState({status: Status.LOADING, page: this.state.page + 1, showLoadMore: false})
+        this.scroll()
+    
+        API.FetchImg(this.props.imgName, this.state.page)
+        .then(data => this.setState({hits: [...this.state.hits, ...data.hits]}))
+        .finally(()=>{this.setState({status: Status.REJECTED, showLoadMore: true}); this.scroll()})
         
-        const KEY = '25477224-484b864fbd655a75604639e30';
-        const BASE_URL = `https://pixabay.com/api/?q=${this.props.data}&page=1&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
-       
-       
+ }
 
-        if (prevProps.data !== this.props.data) {
-            this.setState({ status: 'pending' })
-            return fetch(BASE_URL).then(res => {
-                if (res.ok) {
-                   
-                    return res.json();
-                }
-                return Promise.reject(new Error(`${this.props.data} не существует на нашем сайте`));
-            }).then(console.log)
-            .then(hits => this.setState({ hits, status: 'resolve' })).then(console.log(this.state.hits)).catch(error => this.setState({ error, status: 'rejected' }))
-         
-        }
-        
-    }
-   
-    render() {
-        const { hits, error, status } = this.state;
-        if (status === 'idle') {
-            return <h1> Что будем искать?..</h1>
-        }
-       
-        if (status === "pending") {
-            return <Grid height={24} width={24} color='red' />
-        }
-        if (status === 'rejected') {
-            return <h1> {error.message}</h1>
-        }
-         if (status === "resolve") 
-             return <ul className={css.imageGallery}>
-                 {/* {this.state.hits.map(img => <ImageGalleryItem key={img.id} URL={img.webformatURL}
-                     largeImg={img.largeImageURL} alt={this.props.imgName} showModal={this.showModal} />)
-                 } */}
-            </ul>
-        }
+ scroll() {
+    window.scrollBy({
+    top: 500,
+    behavior: 'smooth',
+    })  
+    
+}
+  
+  
+  
+  
+  render() {
 
-    }
+    const {error, hits, status, maxPage} = this.state
+    return (
       
+        <section>
 
-export default ImageGallery;
+        {error && <div className='wrap'><h2>Картинки с именем <span className='wrapper'>{this.props.imgName}</span> не найдено</h2></div>}
+
+        {this.props.imgName === "" && <div className='wrap'><h2>Введите текст для поиска картинки</h2></div>}
+  
+        {hits && <><ul className={css.imageGallery}>{this.state.hits.map(img => <ImageGalleryItem key={img.id} URL={img.webformatURL} largeImg={img.largeImageURL} alt={this.props.imgName} showModal={this.showModal} />)}
+        
+        </ul> </>}
+        
+        {status === "loading" && <Loading/>}
+
+       {maxPage !== this.state.page && this.state.hits && this.state.showLoadMore && <Button loadMore={this.loadMore}/> }
+       
+        { status === "modal" && <Modal  URL={this.state.modalImg} closeModal={this.closeModal}  />}
+       
+        </section>
+  )
+  }
+}

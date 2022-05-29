@@ -1,59 +1,56 @@
-import { Component } from "react";
-// import { toast } from "react-toastify";
-import { BiSearchAlt } from "react-icons/bi"
-import css from './SearchBar.module.css';
+import React, { Component } from 'react'
+import css from './Searchbar.module.css'
+import { FiSearch } from "react-icons/fi";
 
-class SearchBar extends Component {
-     
-    state = {
-        text: '',
-    }
 
-    handleSearch = (e) => {
-        e.preventDefault();
-        if (this.state.text.trim() === '') {
-            alert("Введите предмет поиска")
-              
-            return;
-        }
-        this.props.onSubmit(this.state.text)
+export default class Searchbar extends Component {
 
-        this.reset();
-
-    }
-    handleChange = (e) => {
-        const { name, value } = e.currentTarget;
-        this.setState({[name]:value})
-    }
-    reset = () => {
-        this.setState({
-            text: '',
-        })
-    }
-    
-    render() {
-        return(
-            <header className={css.searchbar}>
-              
-  <form onSubmit={this.handleSearch} className={css.searchForm}>
-    <button type="submit" className={css.searchForm_button}>
-    <BiSearchAlt size={24} />
-    </button>
-
-    <input
-    className={css.searchForm_input}
-     value={this.state.text}
-    onChange={this.handleChange}
-    type="text"
-    autoComplete="off"
- autoFocus
-                        placeholder="Search images and photos"
-                        name="text"
-    />
-  </form>
-    </header>
-        )
-    }
+state = {
+  query: ""
 }
 
-export default SearchBar;
+handleSubmit = e => {
+  e.preventDefault();
+
+  if(this.state.query.trim() === "") {
+    alert("Введите название для поиска картинок")
+    return
+  }
+  this.props.onSubmit(this.state.query)
+  this.setState({ query: "" })
+  ;
+}
+
+
+handelInputChange  = e => {
+  const {value} = e.currentTarget
+  this.setState({ query: value });
+  
+};
+  
+  render() {
+    
+    return (
+      <>
+        <header className={css.searchbar}>
+          <form className={css.searchForm} onSubmit={this.handleSubmit} >
+            <button type="submit" className={css.searchForm_button}>
+               <FiSearch/>
+            </button>
+
+            <input
+              value={this.state.query}
+              name='value'
+              className={css.searchForm_input}
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Search images and photos"
+              onChange={this.handelInputChange}
+            />
+          </form>
+        </header>
+      </>
+    )
+  }
+}

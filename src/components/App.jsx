@@ -1,34 +1,25 @@
-// import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import SearchBar from './SearchBar';
-import ImageGallery from './ImageGallery';
-import Button from './Button';
-import { Component } from 'react';
+import React, { Component } from 'react'
+import Searchbar from './Searchbar/Searchbar'
+import ImageGallery from './ImageGallery/ImageGallery'
 
-import styles from './Styles.module.css'
-import { ToastContainer } from 'react-toastify';
 
-class App extends Component{
-
-  state = {
-    text: "",
-  }
-  handleSubmitData = text => {
-    
-    this.setState({ text });
-  } 
+export default class App extends Component {
+ state = {
+   nameQuery: "",
+   
+ }
+ 
+ formSubmit = (nameQuery) => {
+   
+   this.setState ({nameQuery})
+ } 
 
   render() {
     return (
-      
-      <div className={styles.app}>
-        <SearchBar onSubmit={this.handleSubmitData} />
-        <ImageGallery data={this.state.text} />
-        <Button />
-       <ToastContainer />
-      </div>
-      
-    );
+      <div >
+        <Searchbar onSubmit={this.formSubmit} />
+        <ImageGallery imgName={this.state.nameQuery} />
+       </div>
+    )
   }
-};
-
-export default App;
+}
